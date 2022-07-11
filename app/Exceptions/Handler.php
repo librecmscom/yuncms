@@ -8,6 +8,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Psr\Log\LogLevel;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -18,7 +19,7 @@ class Handler extends ExceptionHandler
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
     protected $levels = [
-        //
+        \PDOException::class => LogLevel::CRITICAL,
     ];
 
     /**

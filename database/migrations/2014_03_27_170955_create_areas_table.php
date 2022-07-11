@@ -19,16 +19,13 @@ return new class() extends Migration {
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parent_id')->nullable()->comment('父地区');
+            $table->unsignedBigInteger('parent_id')->index()->nullable()->comment('父地区');
             $table->tinyInteger('level')->comment('地区等级');
             $table->string('name', 50)->index()->comment('地区名称');
-            $table->string('pinyin')->nullable()->comment('拼音');
-            $table->unsignedInteger('city_code', 10)->nullable()->comment('城市编码');
-            $table->unsignedInteger('ad_code', 10)->nullable()->comment('区域编码');
+            $table->unsignedInteger('city_code')->nullable()->comment('城市区号');
+            $table->unsignedInteger('ad_code')->nullable()->comment('区域编码');
             $table->string('lng_lat', 30)->nullable()->comment('中心经纬度');
             $table->smallInteger('order')->default(0)->nullable()->comment('排序');
-            $table->index(['name', 'pinyin']);
-            $table->index(['parent_id', 'order', 'id']);
             $table->timestamps();
 
             $table->comment('地区表');

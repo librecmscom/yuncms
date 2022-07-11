@@ -27,11 +27,12 @@ abstract class FormRequest extends \Illuminate\Foundation\Http\FormRequest
 
     /**
      * 获取客户端端口
+     *
      * @return int|null
      */
     public function getRemotePort(): ?int
     {
         $remotePort = $this->server('REMOTE_PORT');
-        return $remotePort ?: null;
+        return $remotePort ? (int)$remotePort : null;
     }
 }
