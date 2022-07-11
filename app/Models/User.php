@@ -36,6 +36,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $updated_at 最后更新时间
  * @property Carbon|null $deleted_at 删除时间
  *
+ * @property UserProfile $profile 个人信息
  * @property UserExtra $extra 扩展信息
  * @author Tongle Xu <xutongle@msn.com>
  */
@@ -117,11 +118,23 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         static::created(function (User $model) {
+            $model->profile()->create();//创建Profile
             $model->extra()->create();//创建Extra
         });
         static::forceDeleted(function (User $model) {
+            $model->profile->delete();
             $model->extra->delete();
         });
+    }
+
+    /**
+     * Get the profile relation.
+     *
+     * @return HasOne
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class);
     }
 
     /**
@@ -133,7 +146,6 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserExtra::class);
     }
-
 
     /**
      * 重置用户手机号
@@ -163,5 +175,20 @@ class User extends Authenticatable
         ])->saveQuietly();
         Event::dispatch(new \App\Events\User\EmailReset($this));
         return $status;
+    }
+
+    /**
+     * 随机生成一个用户标识
+     *
+     * @param string $name 用户名称
+     * @return string
+     */
+    public static function generateName(string $name): string
+    {
+        if (static::query()->where('name', '=', $name)->exists()) {
+            $row = static::query()->max('id');
+            $name = $name . ++$row;
+        }
+        return $name;
     }
 }
