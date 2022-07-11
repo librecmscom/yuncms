@@ -9,6 +9,11 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 
+/**
+ * 字符串两头去空
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ */
 class TrimStrings extends Middleware
 {
     /**

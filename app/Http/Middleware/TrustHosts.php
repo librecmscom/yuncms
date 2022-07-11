@@ -9,6 +9,11 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Middleware\TrustHosts as Middleware;
 
+/**
+ * 受信任的主机名
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ */
 class TrustHosts extends Middleware
 {
     /**

@@ -12,6 +12,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * 验证后重定向
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ */
 class RedirectIfAuthenticated
 {
     /**

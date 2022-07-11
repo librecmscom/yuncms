@@ -10,6 +10,11 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Middleware\TrustProxies as Middleware;
 use Illuminate\Http\Request;
 
+/**
+ * 受信任的代理服务器IP
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ */
 class TrustProxies extends Middleware
 {
     /**
@@ -17,7 +22,12 @@ class TrustProxies extends Middleware
      *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = [
+        '10.0.0.0/8',
+        '100.64.0.0/10',
+        '172.16.0.0/16',
+        '192.168.0.0/16',
+    ];
 
     /**
      * The headers that should be used to detect proxies.

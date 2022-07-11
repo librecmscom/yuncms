@@ -9,13 +9,18 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
+/**
+ * 认证检查中间件
+ *
+ * @author Tongle Xu <xutongle@gmail.com>
+ */
 class Authenticate extends Middleware
 {
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
      * @param \Illuminate\Http\Request $request
-     * @return string|null
+     * @return string|null|void
      */
     protected function redirectTo($request)
     {
