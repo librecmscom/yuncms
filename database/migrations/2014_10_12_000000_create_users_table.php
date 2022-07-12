@@ -19,11 +19,12 @@ return new class() extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id()->comment('用户ID');
-            $table->string('name', 50)->unique()->nullable()->comment('用户名称');
+            $table->string('username')->unique()->comment('用户名');
             $table->string('email')->unique()->nullable()->comment('邮箱');
             $table->string('phone', 11)->unique()->nullable()->comment('手机号');
+            $table->string('name')->comment('用户名称');
             $table->string('avatar')->nullable()->comment('头像');
-            $table->string('status', 10)->comment('用户状态');
+            $table->string('status')->default('inactivated')->comment('状态：inactivated/active/frozen');
             $table->unsignedInteger('score')->nullable()->default(0)->comment('积分');
 
             $table->string('password')->nullable()->comment('密码');

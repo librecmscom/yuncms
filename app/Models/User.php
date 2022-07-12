@@ -25,9 +25,10 @@ use Laravel\Passport\HasApiTokens;
  * 用户模型
  *
  * @property int $id 用户ID
- * @property string $name 用户名称
+ * @property string $username 用户名
  * @property string|null $email 用户邮箱
  * @property string|null $phone 手机号
+ * @property string $name 用户名称
  * @property string $avatar 头像
  * @property string $status 用户状态
  * @property int $score 积分
@@ -39,8 +40,9 @@ use Laravel\Passport\HasApiTokens;
  * @property Carbon $updated_at 最后更新时间
  * @property Carbon|null $deleted_at 删除时间
  *
- * @property-read bool $emptyPassword 未设置密码
- * @property-read string|null $fuzzyPhone 模糊过的手机号
+ * @property-read bool $emptyPassword 是否未设置密码
+ * @property-read string|null $displayStatus 显示状态
+ * @property-read string|null $displayPhone 显示手机号
  *
  * @property UserProfile $profile 个人信息
  * @property UserExtra $extra 扩展信息
@@ -79,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'phone', 'avatar', 'score', 'status', 'password'
+        'username', 'email', 'phone', 'name', 'avatar', 'score', 'status', 'password'
     ];
 
     /**
@@ -108,8 +110,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'id' => 'int',
+        'username' => 'string',
         'email' => 'string',
         'phone' => 'string',
+        'name' => 'string',
         'avatar' => 'string',
         'score' => 'int',
         'status' => 'int',
@@ -331,14 +335,14 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * 重置用户名
      *
-     * @param string $name
+     * @param string $username
      * @return void
      */
-    public function resetUsername(string $name): void
+    public function resetUsername(string $username): void
     {
-        if ($name != $this->name) {
-            $this->forceFill(['name' => $name])->saveQuietly();
-            Event::dispatch(new \App\Events\User\NameReset($this));
+        if ($username != $this->username) {
+            $this->forceFill(['username' => $username])->saveQuietly();
+            Event::dispatch(new \App\Events\User\UsernameReset($this));
         }
     }
 
@@ -388,30 +392,32 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * 查找用户
-     * @param string $name
+     * @param string $username
      * @return mixed
      */
-    public function findForPassport(string $name)
+    public function findForPassport(string $username)
     {
-        if (filter_var($name, FILTER_VALIDATE_EMAIL)) {
-            return $this->active()->where('email', $name)->first();
+        if (preg_match(config('system.phone_rule'), $username)) {
+            return $this->active()->where('phone', $username)->first();
+        } elseif (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+            return $this->active()->where('email', $username)->first();
         } else {
-            return $this->active()->where('phone', $name)->first();
+            return $this->active()->where('username', $username)->first();
         }
     }
 
     /**
      * 随机生成一个用户标识
      *
-     * @param string $name 用户名称
+     * @param string $username 用户名
      * @return string
      */
-    public static function generateName(string $name): string
+    public static function generateUsername(string $username): string
     {
-        if (static::query()->where('name', '=', $name)->exists()) {
+        if (static::query()->where('username', '=', $username)->exists()) {
             $row = static::query()->max('id');
-            $name = $name . ++$row;
+            $username = $username . ++$row;
         }
-        return $name;
+        return $username;
     }
 }

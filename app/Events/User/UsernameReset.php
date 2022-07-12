@@ -21,7 +21,7 @@ use Illuminate\Queue\SerializesModels;
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class NameReset implements ShouldBroadcast
+class UsernameReset implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
