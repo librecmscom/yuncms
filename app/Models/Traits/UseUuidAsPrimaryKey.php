@@ -14,12 +14,12 @@ use Illuminate\Support\Str;
  * 使用UUID作为主键
  * @mixin Model
  */
-trait UsingUuidAsPrimaryKey
+trait UseUuidAsPrimaryKey
 {
     public static function bootUsingUuidAsPrimaryKey(): void
     {
         static::creating(function (self $model): void {
-            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UsingUuidAsPrimaryKey $model */
+            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UseUuidAsPrimaryKey $model */
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::orderedUuid()->toString();
             }

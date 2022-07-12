@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\Model;
  * 使用时间作为主键
  * @mixin Model
  */
-trait UsingDatetimeAsPrimaryKey
+trait UseDatetimeAsPrimaryKey
 {
     public static function bootUsingDatetimeAsPrimaryKey(): void
     {
         static::creating(function (self $model): void {
-            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UsingDatetimeAsPrimaryKey $model */
+            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UseDatetimeAsPrimaryKey $model */
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = $model->generateKey();
             }

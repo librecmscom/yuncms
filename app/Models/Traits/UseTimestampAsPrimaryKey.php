@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\Model;
  * 使用时间戳作为主键
  * @mixin Model
  */
-trait UsingTimestampAsPrimaryKey
+trait UseTimestampAsPrimaryKey
 {
     public static function bootUsingTimestampAsPrimaryKey(): void
     {
         static::creating(function (self $model): void {
-            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UsingTimestampAsPrimaryKey $model */
+            /* @var \Illuminate\Database\Eloquent\Model|\App\Models\Traits\UseTimestampAsPrimaryKey $model */
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = $model->generateKey();
             }
