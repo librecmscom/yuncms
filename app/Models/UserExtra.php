@@ -15,6 +15,9 @@ use Illuminate\Support\Carbon;
  * 用户扩展信息
  *
  * @property int $user_id 用户ID
+ * @property Carbon|null $last_login_at 最后登录时间
+ * @property string|null $last_login_ip 最后登录IP
+ * @property int $login_num 登录次数
  *
  * @author Tongle Xu <xutongle@msn.com>
  */
