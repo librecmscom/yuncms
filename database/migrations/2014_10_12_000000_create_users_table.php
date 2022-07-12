@@ -22,10 +22,8 @@ return new class() extends Migration {
             $table->string('name', 50)->unique()->nullable()->comment('用户名称');
             $table->string('email')->unique()->nullable()->comment('邮箱');
             $table->string('phone', 11)->unique()->nullable()->comment('手机号');
-            $table->string('nickname')->nullable()->comment('用户名称');
             $table->string('avatar')->nullable()->comment('头像');
-            $table->tinyInteger('auth_status')->nullable()->default(false)->comment('认证状态：0 未提交 1 等待认证 2 认证通过 3 认证失败');
-            $table->tinyInteger('status')->default(0)->comment('用户状态：0正常 1禁用');
+            $table->string('status', 10)->comment('用户状态');
             $table->unsignedInteger('score')->nullable()->default(0)->comment('积分');
 
             $table->string('password')->nullable()->comment('密码');

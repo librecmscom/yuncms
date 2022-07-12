@@ -29,8 +29,7 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $email 用户邮箱
  * @property string|null $phone 手机号
  * @property string $avatar 头像
- * @property boolean $auth_status 认证状态：0 未提交 1 等待认证 2 认证通过 3 认证失败
- * @property int $status 用户状态
+ * @property string $status 用户状态
  * @property int $score 积分
  * @property string|null $password 用户密码
  * @property string|null $remember_token 记住我 Token
@@ -58,11 +57,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public const DEFAULT_AVATAR = 'img/avatar.jpg';
 
     // 用户状态
-    public const STATUS_NORMAL = 0;
-    public const STATUS_DISABLED = 1;
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVATED = 'inactivated';
+    public const STATUS_FROZEN = 'frozen';
     public const STATUSES = [
-        self::STATUS_NORMAL => '正常',
-        self::STATUS_DISABLED => '已禁用',
+        self::STATUS_INACTIVATED => '未激活',
+        self::STATUS_ACTIVE => '正常',
+        self::STATUS_FROZEN => '已冻结',
     ];
 
     /**
@@ -97,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $attributes = [
         'score' => 0,
-        'status' => self::STATUS_NORMAL
+        'status' => self::STATUS_ACTIVE
     ];
 
     /**
@@ -164,7 +165,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', '=', static::STATUS_NORMAL);
+        return $query->where('status', '=', static::STATUS_ACTIVE);
     }
 
     /**
@@ -203,11 +204,21 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * 获取状态显示
+     *
+     * @return string
+     */
+    public function getDisplayStatusAttribute(): string
+    {
+        return self::STATUSES[$this->status ?? self::STATUS_ACTIVE];
+    }
+
+    /**
      * Get the phone attribute
      *
      * @return string|null
      */
-    public function getFuzzyPhoneAttribute(): ?string
+    public function getDisplayPhoneAttribute(): ?string
     {
         return $this->phone ? substr_replace($this->phone, '****', 3, 4) : null;
     }
@@ -291,19 +302,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function markActive(): bool
     {
         return $this->forceFill([
-            'status' => static::STATUS_NORMAL,
+            'status' => static::STATUS_ACTIVE,
         ])->save();
     }
 
     /**
-     * Mark the given user's disabled.
+     * Mark the given user's frozen.
      *
      * @return bool
      */
-    public function markDisabled(): bool
+    public function markFrozen(): bool
     {
         return $this->forceFill([
-            'status' => static::STATUS_DISABLED,
+            'status' => static::STATUS_FROZEN,
         ])->save();
     }
 
@@ -314,7 +325,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isActive(): bool
     {
-        return $this->status == static::STATUS_NORMAL;
+        return $this->status == static::STATUS_ACTIVE;
     }
 
     /**
