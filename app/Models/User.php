@@ -34,6 +34,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $score 积分
  * @property string|null $password 用户密码
  * @property string|null $remember_token 记住我 Token
+ * @property Carbon|null $last_active_at 最后活动时间
  * @property Carbon|null $phone_verified_at 手机验证时间
  * @property Carbon|null $email_verified_at 邮箱验证时间
  * @property Carbon $created_at 注册时间
@@ -330,6 +331,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isActive(): bool
     {
         return $this->status == static::STATUS_ACTIVE;
+    }
+
+    /**
+     * 刷新最后活动时间
+     *
+     * @return $this
+     */
+    public function refreshLastActiveAt(): static
+    {
+        $this->updateQuietly([
+            'last_active_at' => Carbon::now(),
+            'status' => self::STATUS_ACTIVE,
+        ]);
+        return $this;
     }
 
     /**

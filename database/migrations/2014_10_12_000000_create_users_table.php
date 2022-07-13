@@ -29,6 +29,7 @@ return new class() extends Migration {
 
             $table->string('password')->nullable()->comment('密码');
             $table->rememberToken()->comment('记住我token');
+            $table->timestamp('last_active_at')->nullable()->comment('最后活动时间');
             $table->timestamp('phone_verified_at')->nullable()->comment('手机验证时间');
             $table->timestamp('email_verified_at')->nullable()->comment('邮件验证时间');
             $table->timestamps();
